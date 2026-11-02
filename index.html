@@ -1,1 +1,319 @@
-<!DOCTYPE html><html lang=en><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=theme-color content=#1a1412><meta name=description content="Creative24 salon rate card"><title>Creative24 Rate Card</title><link rel=icon href=data:,><link rel=stylesheet href=style.css></head><body><header class=top><h1>Creative24</h1><p>Rate card</p></header><div class=bar><input id=q type=search placeholder="Service dhundho (jaise hair cut, spa)" aria-label="Search services" autocomplete=off><nav class=chips id=chips aria-label=Categories></nav></div><main id=app></main><p class=empty id=empty hidden>Kuch nahi mila. Doosra naam try karo.</p><footer class=foot><p>Prices change ho sakte hain. Final rate salon par confirm karein.</p><p><a href=rating.html>Experience kaisa raha? Rating dein</a></p></footer><script src=script.js></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#08090c">
+<title>CREATIVE24 | Digital Price Menu</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
+:root{--bg:#08090c;--navbg:rgba(8,9,12,.78);--text:#f8f4ed;--muted:#96918b;--gold:#d9b487;--glass:rgba(255,255,255,.055);--border:rgba(255,255,255,.12)}
+.light{--bg:#f4efe8;--navbg:rgba(244,239,232,.82);--text:#211d19;--muted:#77716b;--gold:#a87543;--glass:rgba(255,255,255,.65);--border:rgba(40,30,20,.12)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;transition:background .7s,color .7s;min-height:100vh}
+[hidden]{display:none!important}
+a{color:inherit;text-decoration:none}
+
+/* LOADER */
+.loader{position:fixed;inset:0;z-index:1000;background:#08090c;display:flex;align-items:center;justify-content:center;flex-direction:column;animation:loaderExit 1s ease 2s forwards}
+.loader-logo{font-size:28px;letter-spacing:9px;color:#fff;animation:logoReveal 1.3s ease both}
+.loader-logo span{color:#d9b487}
+.loader-line{width:150px;height:2px;background:#29231d;margin-top:25px;overflow:hidden}
+.loader-line:after{content:"";display:block;height:100%;width:0;background:#d9b487;animation:loading 1.5s ease forwards}
+@keyframes loading{to{width:100%}}
+@keyframes logoReveal{from{opacity:0;letter-spacing:20px;filter:blur(10px)}to{opacity:1;letter-spacing:9px;filter:blur(0)}}
+@keyframes loaderExit{to{opacity:0;visibility:hidden;transform:scale(1.08)}}
+
+/* BACKGROUND */
+.ambient,.star-background{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(110px);opacity:.17;animation:floatOrb 16s ease-in-out infinite alternate}
+.orb.one{width:350px;height:350px;background:#b47c48;top:-130px;left:-100px}
+.orb.two{width:400px;height:400px;background:#594b9c;right:-150px;top:35%;animation-delay:-5s}
+.orb.three{width:300px;height:300px;background:#9b6545;bottom:-150px;left:30%;animation-delay:-8s}
+@keyframes floatOrb{0%{transform:translate(0,0) scale(.9)}50%{transform:translate(90px,70px) scale(1.2)}100%{transform:translate(-60px,120px) scale(.85)}}
+.star{position:absolute;width:2px;height:2px;background:#fff;border-radius:50%;box-shadow:0 0 7px 2px rgba(255,255,255,.7);animation:twinkle var(--duration) ease-in-out infinite;animation-delay:var(--delay)}
+.star.shooting{width:100px;height:1px;border-radius:0;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 10px #fff;animation:shootingStar var(--duration) linear infinite;animation-delay:var(--delay)}
+@keyframes twinkle{0%,100%{opacity:.15;transform:scale(.5)}50%{opacity:1;transform:scale(1.8)}}
+@keyframes shootingStar{0%{opacity:0;transform:translate(0,0) rotate(-35deg)}5%{opacity:1}20%{opacity:0;transform:translate(-250px,170px) rotate(-35deg)}100%{opacity:0}}
+.light .star-background{opacity:.25}
+
+/* NAVBAR (brand + search + buttons) */
+.nav{position:sticky;top:0;z-index:20;background:var(--navbg);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--border);animation:slideDown 1s ease 2.1s both}
+.nav-in{max-width:1200px;margin:auto;padding:12px 24px;display:flex;align-items:center;gap:16px}
+.brand{font-weight:800;letter-spacing:4px;font-size:17px;white-space:nowrap}
+.brand span{color:var(--gold)}
+.search-box{position:relative;overflow:hidden;flex:1;max-width:460px;margin:0 auto;display:flex;align-items:center;gap:10px;padding:10px 18px;border:1px solid rgba(217,180,135,.35);border-radius:50px;background:var(--glass);transition:.4s}
+.search-box:before{content:"";position:absolute;top:0;left:-120%;width:80%;height:100%;background:linear-gradient(110deg,transparent,rgba(255,255,255,.15),transparent);transform:skewX(-20deg);animation:searchShine 5s ease-in-out infinite;pointer-events:none}
+@keyframes searchShine{0%,60%{left:-120%}100%{left:150%}}
+.search-box:focus-within{border-color:var(--gold);box-shadow:0 0 24px rgba(217,180,135,.2)}
+.search-box span{color:var(--gold);font-size:19px;position:relative;z-index:1}
+.search-box input{width:100%;position:relative;z-index:1;background:transparent;border:0;outline:0;color:var(--text);font:inherit;font-size:13px}
+.search-box input::placeholder{color:var(--muted)}
+.nav-btns{display:flex;gap:8px}
+.pill{border:1px solid var(--border);background:var(--glass);color:var(--text);padding:10px 16px;border-radius:30px;cursor:pointer;font:inherit;font-size:12px;white-space:nowrap;transition:.4s}
+.pill:hover{border-color:var(--gold);transform:scale(1.05)}
+.pill.gold{background:var(--gold);border-color:var(--gold);color:#17110c;font-weight:700}
+@keyframes slideDown{from{opacity:0;transform:translateY(-30px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+.hero,.categories,.menu,footer{position:relative;z-index:1}
+.hero{min-height:400px;padding:85px 20px 55px;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center}
+.eyebrow{font-size:10px;letter-spacing:6px;color:var(--gold);animation:fadeUp 1s 2.2s both}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(55px,10vw,110px);line-height:1.03;font-weight:500;margin:25px 0}
+.hero h1 .first{display:block;animation:titleLeft 1s cubic-bezier(.16,1,.3,1) 2.3s both}
+.hero h1 em{color:var(--gold);display:block;animation:titleRight 1s cubic-bezier(.16,1,.3,1) 2.55s both}
+.hero p{font-size:11px;letter-spacing:2px;color:var(--muted);animation:fadeUp 1s 2.9s both}
+.hero-line{height:1px;width:0;background:var(--gold);margin:28px auto;animation:lineGrow 1.3s 3s forwards}
+@keyframes titleLeft{from{opacity:0;transform:translateX(-70px);filter:blur(12px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes titleRight{from{opacity:0;transform:translateX(70px);filter:blur(12px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes lineGrow{to{width:90px}}
+
+/* CATEGORIES */
+.categories{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;padding:10px 20px 50px}
+.category{padding:12px 21px;border-radius:30px;border:1px solid var(--border);background:var(--glass);color:var(--muted);font:inherit;font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:.4s}
+.category:hover{transform:translateY(-5px);border-color:var(--gold)}
+.category.active{background:var(--gold);color:#17110c;border-color:var(--gold);box-shadow:0 5px 25px #d9b48735}
+
+/* MENU */
+.menu{max-width:920px;margin:auto;padding:0 30px 90px}
+.menu-heading{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--gold);padding-bottom:18px;margin-bottom:35px}
+.menu-heading:not(:first-child){margin-top:30px}
+.menu-heading h2{font-family:'Playfair Display',serif;font-size:32px;font-weight:500}
+.menu-heading span{font-size:10px;color:var(--gold);letter-spacing:2px}
+.menu-section{margin-bottom:60px;opacity:0;transform:translateY(35px);transition:opacity .8s,transform .8s}
+.menu-section.visible{opacity:1;transform:none}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.section-title h3{color:var(--gold);font-size:12px;letter-spacing:3px}
+.section-title span{font-size:10px;color:var(--muted)}
+.service{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:17px 15px;border-bottom:1px solid var(--border);border-radius:8px;transition:.35s}
+.service:hover{background:var(--glass);transform:translateX(10px);border-color:var(--gold)}
+.service-name{font-size:14px;font-weight:500;flex:1}
+.service-price{color:var(--gold);font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.multi .cell{width:96px;text-align:right}
+.service.head{padding-top:4px;padding-bottom:8px;border-bottom:1px solid var(--gold)}
+.service.head:hover{background:none;transform:none;border-color:var(--gold)}
+.service.head .cell{color:var(--gold);font-size:10px;letter-spacing:1.5px;font-weight:700}
+.note{margin:10px 15px 0;font-size:12px;color:var(--muted)}
+.no-results{display:none;text-align:center;padding:60px 15px;color:var(--muted)}
+
+/* FOOTER */
+footer{text-align:center;padding:45px 20px;border-top:1px solid var(--border)}
+footer strong{letter-spacing:5px;font-size:14px}
+footer strong span{color:var(--gold)}
+footer p{font-size:11px;color:var(--muted);margin-top:13px}
+footer a{color:var(--gold)}
+
+/* CONTACT POPUP */
+.modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);animation:fade .25s ease}
+.sheet{position:relative;width:100%;max-width:440px;max-height:92vh;overflow:auto;background:var(--bg);border:1px solid var(--border);border-radius:22px;padding:28px 22px 22px;animation:rise .35s cubic-bezier(.2,.8,.2,1)}
+.sheet .brand{text-align:center;font-size:20px}
+.tag{text-align:center;color:var(--muted);font-size:10px;letter-spacing:3px;margin:8px 0 18px}
+.row{display:flex;justify-content:space-between;gap:14px;padding:13px 4px;border-bottom:1px solid var(--border);font-size:14px;transition:.3s}
+.row:hover{padding-left:12px;color:var(--gold)}
+.row b{color:var(--gold);font-size:11px;letter-spacing:2px;font-weight:600;white-space:nowrap;padding-top:2px}
+.row span{text-align:right}
+.x{position:absolute;top:10px;right:14px;background:none;border:0;color:var(--muted);font-size:28px;cursor:pointer}
+@keyframes fade{from{opacity:0}}
+@keyframes rise{from{opacity:0;transform:translateY(30px) scale(.97)}}
+
+/* MOBILE */
+@media(max-width:600px){
+.nav-in{flex-wrap:wrap;padding:10px 14px;gap:10px}
+.brand{font-size:14px;letter-spacing:2px}
+.nav-btns{margin-left:auto}
+.pill{padding:8px 12px;font-size:11px}
+.search-box{order:3;flex-basis:100%;max-width:none;padding:9px 16px}
+.hero{min-height:360px;padding:60px 15px 45px}
+.hero h1{font-size:59px}
+.hero p{font-size:9px;letter-spacing:1px}
+.eyebrow{letter-spacing:4px}
+.categories{padding:10px 17px 40px}
+.menu{padding:0 14px 65px}
+.menu-heading h2{font-size:27px}
+.section-title h3{font-size:11px}
+.service{padding:15px 6px;gap:6px}
+.service-name{font-size:13px}
+.service-price{font-size:13px}
+.multi .cell{width:64px;font-size:12px}
+.service.head .cell{font-size:9px;letter-spacing:.5px}
+.menu-section{margin-bottom:45px}
+.orb{filter:blur(80px)}
+.modal{align-items:flex-end;padding:0}
+.sheet{border-radius:22px 22px 0 0;max-width:none}
+}
+@media(prefers-reduced-motion:reduce){
+*,*:before,*:after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+.loader{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="loader"><div class="loader-logo">CREATIVE<span>24</span></div><div class="loader-line"></div></div>
+
+<div class="ambient"><div class="orb one"></div><div class="orb two"></div><div class="orb three"></div></div>
+<div class="star-background" id="starBackground"></div>
+
+<header class="nav">
+ <div class="nav-in">
+  <div class="brand">CREATIVE<span>24</span></div>
+  <div class="search-box">
+   <span>⌕</span>
+   <input id="search" type="search" placeholder="Search service..." aria-label="Search services" autocomplete="off">
+  </div>
+  <div class="nav-btns">
+   <button class="pill gold" id="contactBtn">☎ Contact</button>
+   <button class="pill" id="theme">☀ Light</button>
+  </div>
+ </div>
+</header>
+
+<section class="hero">
+ <div class="eyebrow">THE ART OF LOOKING GOOD</div>
+ <h1><span class="first">Digital</span><em>Price Menu.</em></h1>
+ <p>YOUR STYLE. YOUR EXPERIENCE. OUR EXPERTISE.</p>
+ <div class="hero-line"></div>
+</section>
+
+<div class="categories">
+ <button class="category active" data-filter="all">ALL SERVICES</button>
+ <button class="category" data-filter="female">FEMALE</button>
+ <button class="category" data-filter="male">MALE</button>
+</div>
+
+<main class="menu">
+ <div id="menuContent"></div>
+ <div class="no-results" id="noResults">No matching services found.</div>
+</main>
+
+<footer>
+ <strong>CREATIVE<span>24</span> UNISEX SALON</strong>
+ <p>Beauty is not a luxury. It's an experience.</p>
+ <p><a href="rating.html">Experience kaisa raha? Rating dein</a></p>
+ <p>© 2026 Creative24. All Rights Reserved.</p>
+</footer>
+
+<div class="modal" id="modal" hidden>
+ <div class="sheet" role="dialog" aria-label="Contact">
+  <button class="x" id="close" aria-label="Close">×</button>
+  <div class="brand">CREATIVE<span>24</span></div>
+  <p class="tag">UNISEX HAIR &amp; BEAUTY SALON</p>
+  <a class="row" href="https://www.google.com/maps/search/?api=1&query=Creative24+Unisex+Salon+Sai+World+City+Palaspe+Phata+Panvel+410206" target="_blank" rel="noopener"><b>ADDRESS</b><span>Shop No. G-11, Sai World City,<br>Palaspe Phata, Panvel-410 206</span></a>
+  <a class="row" href="tel:7045024218"><b>CALL</b><span>70450 24218</span></a>
+  <a class="row" href="tel:8291187719"><b>CALL</b><span>82911 87719</span></a>
+  <a class="row" href="https://wa.me/918976062424" target="_blank" rel="noopener"><b>WHATSAPP</b><span>89760 62424</span></a>
+  <a class="row" href="https://wa.me/918291187719" target="_blank" rel="noopener"><b>WHATSAPP</b><span>82911 87719</span></a>
+  <a class="row" href="mailto:Creative24unisex@gmail.com"><b>EMAIL</b><span>Creative24unisex@gmail.com</span></a>
+  <a class="row" href="https://instagram.com/Creative24unisex_salon" target="_blank" rel="noopener"><b>INSTAGRAM</b><span>Creative24unisex_salon</span></a>
+  <a class="row" href="https://facebook.com/Creative24unisex_salon" target="_blank" rel="noopener"><b>FACEBOOK</b><span>Creative24unisex_salon</span></a>
+  <a class="row" href="rating.html"><b>RATING</b><span>Apna experience batayein</span></a>
+ </div>
+</div>
+
+<script>
+/* STARS */
+const sb=document.getElementById("starBackground");
+for(let i=0;i<140;i++){const s=document.createElement("span");s.className="star";s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";s.style.setProperty("--duration",(2+Math.random()*5)+"s");s.style.setProperty("--delay",(Math.random()*5)+"s");const z=1+Math.random()*2;s.style.width=z+"px";s.style.height=z+"px";sb.appendChild(s)}
+for(let i=0;i<5;i++){const s=document.createElement("span");s.className="star shooting";s.style.left=(30+Math.random()*80)+"%";s.style.top=(Math.random()*65)+"%";s.style.setProperty("--duration",(7+Math.random()*8)+"s");s.style.setProperty("--delay",(Math.random()*12)+"s");sb.appendChild(s)}
+
+/* ===== RATE CARD DATA (price badalni ho to sirf yahin) =====
+   Section: {title, cols?:[...], note?, rows:[[naam, price, (price2), (price3)], ...]}  */
+const DATA=[
+{id:"female",label:"Female",sections:[
+ {title:"THREADING",rows:[["Eyebrows","80"],["Upper lips","30"],["Forehead","30"],["Side lock","110"],["Full face","300"]]},
+ {title:"RELAXING",rows:[["Foot massage","450"],["Back massage","550"],["Body massage","1600 to 2100"],["Body polishing","400 to 500"],["Body bleach","2500"],["Head massage","500"]]},
+ {title:"WAXING",cols:["Honey","Crystal Gel","Rica"],rows:[["Full hand","450","550","550"],["Full legs","450","850","850"],["Half hand","400","450","450"],["Half legs","450","500","500"],["Under arms","120","150","150"],["Brazili","-","-","550 (B)"],["Forehead","-","-","80 (B)"],["Side lock","-","-","180 (B)"],["Upper lips","-","-","80"],["Chin","-","-","100"],["Full back","450","500","500"],["Full front","450","500","500"],["Half back","300","400","400"],["Half front","300","400","400"],["Full body","2000","2300","2300"],["Bikini wax","-","-","2000"]]},
+ {title:"SKIN CARE",rows:[["Oxy bleach","850"],["Kanpeki D-Tan","500"],["Raaga D-Tan","400"],["Face lifting","500"]]},
+ {title:"CLEANUP",rows:[["Richfeel","800"],["Raaga","900"],["Serenite","1000 to 1500"],["Code skin","1200"],["O3+","2000"],["Remilore","2100"]]},
+ {title:"FACIAL",rows:[["Raaga","2000"],["Serenite","2000 to 5500"],["Code skin","2100 to 3800"],["O3+ Bridal","3300 to 4500"],["Ainohoa","3500"],["Kanpeki","2500 to 6000"],["Collagen mask","500"],["Peel off mask","500"]]},
+ {title:"HAND FEET CARE",rows:[["Basic Manicure","700"],["Basic Pedicure","850"],["Full hand bleach","1000"],["Half hand bleach","800"],["Raaga Pedicure","1400"],["Raaga Manicure","1200"],["Serenite Pedicure","1500 to 2200"],["Serenite Manicure","1300 to 1800"],["Heel peel treatment","2000"]]},
+ {title:"FEMALE HAIR CUT",rows:[["Straight and U hair cut","700"],["Layer and step cut","750"],["Advance cut","800"],["Bob cut","1000"],["French cut","900"]]},
+ {title:"HAIR STYLING",cols:["Bob","Shoulder","Midlength"],rows:[["Wash and Blowdry","700","500","600"],["Treatment Wash","800","600","700"],["Ironing","600","800","1000"],["Tongs","700","900","1200"]]},
+ {title:"RELAXING TREATMENT",cols:["Bob","Shoulder","Midlength"],rows:[["Loreal","1200","1500","2500"],["De Fabuls","1500","2000","2800"],["Schwarzkopf","1200","1500","2500"],["Moroccan","1700","2400","3200"],["Nashi","1700","2400","3200"],["Dandruff Treatment","1500","-","-"],["Plex Treatment","3000","4000","5000"]]},
+ {title:"HAIR TEXTURE CHANGE TREATMENT",cols:["Bob","Shoulder","Midlength"],rows:[["Straightening / Smoothing","3500","4500","6000"],["Nano Plastia","3500","5000","7000"],["Kera Smooth","7500","9500","11000"],["Vitamino Colour Treatment","1200","1500","1800"],["Botox Treatment","3500","5000","7000"]]},
+ {title:"HAIR MIX COLORS",rows:[["Root touch-up (1 inch), Ammonia","1400"],["Root touch-up (1 inch), Ammonia free","1500"],["Own colour touch-up with wash & blow dry","1100"]]},
+ {title:"COLORS",cols:["Bob","Shoulder","Midlength"],rows:[["Global Amo","4000","5000","6000"],["Global Amo Free","4500","5500","7000"],["Highlight","3000","6000","8000"],["Crown highlight","3000","4000","5000"],["Ombre / Balayage","-","-","-"]]}
+]},
+{id:"male",label:"Male",sections:[
+ {title:"HAIR STYLE",rows:[["Hair cut","220"],["Beard / shave","130/110"],["Child hair cut below (3 year)","170"],["Hair wash & set","150"],["Hair set","100"],["Body trimming","1200"]]},
+ {title:"HAIR & SCALP TREATMENT",rows:[["Head massage","400"],["Dandruff treatment","750"],["Straightening / smoothing","2000 to 3000"],["Botox","2000 to 3000"],["Hair spa (Loreal)","700 to 1500"],["Moroccan oil luxury hair spa","1100 to 1800"],["Nashi argan hair spa","1100 to 1800"]]},
+ {title:"HAIR COLOURING",cols:["Majirel","Inoa"],rows:[["Global hair colour","750","850"],["Highlight (depends on length)","3000","-"],["Beard colour","250 to 300","-"],["Fashion global hair colour","1500","-"]]},
+ {title:"COMBO PACK",note:"Hair colour wale combo me Inoa colour ke saath rate 1100.",rows:[["Hair cut + beard + D-tan + hair wash","750"],["Hair cut + shave + hair colour","1000"],["Hair cut + beard + clean-up (basic)","1050"],["Hair cut + beard + head massage + hair wash","750"],["Hair cut + shave / beard + hair spa (basic)","1000"],["Hair cut + hair spa (basic) + clean-up","1600"]]}
+]}
+];
+
+let filter="all",observer;
+const content=document.getElementById("menuContent"),search=document.getElementById("search"),noResults=document.getElementById("noResults");
+const isNum=v=>/^\d+$/.test(v);
+const money=v=>/^-*$/.test(v)?"–":"₹"+v.replace(/\d+/g,n=>(+n).toLocaleString("en-IN")).replace(" to "," – ").replace("/"," / ");
+
+function animatePrices(sec){
+ sec.querySelectorAll("[data-price]").forEach(el=>{
+  const target=+el.dataset.price,start=performance.now();
+  (function tick(now){
+   const p=Math.min((now-start)/750,1),e=1-Math.pow(1-p,4);
+   el.textContent="₹"+Math.round(target*e).toLocaleString("en-IN");
+   if(p<1)requestAnimationFrame(tick);
+  })(start);
+ });
+}
+
+function setupObserver(){
+ if(observer)observer.disconnect();
+ observer=new IntersectionObserver(es=>{
+  es.forEach(en=>{
+   if(en.isIntersecting){en.target.classList.add("visible");animatePrices(en.target);observer.unobserve(en.target)}
+  });
+ },{threshold:.08});
+ document.querySelectorAll(".menu-section").forEach(s=>observer.observe(s));
+}
+
+function render(){
+ const t=search.value.trim().toLowerCase();
+ let html="";
+ DATA.forEach(g=>{
+  if(filter!=="all"&&g.id!==filter)return;
+  let inner="";
+  g.sections.forEach(s=>{
+   const rows=s.rows.filter(r=>!t||r[0].toLowerCase().includes(t)||s.title.toLowerCase().includes(t));
+   if(!rows.length)return;
+   inner+=`<section class="menu-section${s.cols?" multi":""}"><div class="section-title"><h3>${s.title}</h3><span>${rows.length} SERVICES</span></div>`;
+   if(s.cols)inner+=`<div class="service head"><span class="service-name"></span>${s.cols.map(c=>`<span class="cell">${c}</span>`).join("")}</div>`;
+   inner+=rows.map(r=>`<div class="service"><span class="service-name">${r[0]}</span>${r.slice(1).map(p=>isNum(p)?`<span class="service-price cell" data-price="${p}">₹0</span>`:`<span class="service-price cell">${money(p)}</span>`).join("")}</div>`).join("");
+   if(s.note)inner+=`<p class="note">${s.note}</p>`;
+   inner+=`</section>`;
+  });
+  if(inner)html+=`<div class="menu-heading"><h2>${g.label}</h2><span>PRICE LIST / 2026</span></div>`+inner;
+ });
+ content.innerHTML=html;
+ noResults.style.display=html?"none":"block";
+ setupObserver();
+}
+
+document.querySelectorAll(".category").forEach(b=>b.addEventListener("click",()=>{
+ document.querySelector(".category.active").classList.remove("active");
+ b.classList.add("active");filter=b.dataset.filter;render();
+}));
+search.addEventListener("input",render);
+
+/* THEME */
+const themeBtn=document.getElementById("theme");
+themeBtn.addEventListener("click",()=>{
+ document.body.classList.toggle("light");
+ themeBtn.textContent=document.body.classList.contains("light")?"☾ Dark":"☀ Light";
+});
+
+/* CONTACT POPUP */
+const modal=document.getElementById("modal");
+const openM=()=>{modal.hidden=false},closeM=()=>{modal.hidden=true};
+document.getElementById("contactBtn").addEventListener("click",openM);
+document.getElementById("close").addEventListener("click",closeM);
+modal.addEventListener("click",e=>{if(e.target===modal)closeM()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeM()});
+
+render();
+</script>
+</body>
+</html>
